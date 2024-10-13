@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kedi Resimleri</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .card-container {
+            text-align: center;
+            margin: 20px;
+        }
+        .card-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            width: 250px;
+            height: 250px;
+            border-radius: 10px;
+            margin: 10px;
+            object-fit: cover;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .new-data-button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #778899;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container" id="cat-container">
+        <h2>Kedi</h2>
+        <div class="card-wrapper" id="cat-data"></div>
+        <button class="new-data-button" id="new-cat-button">Yeni Kedi Getir</button>
+    </div>
+
+    <script>
+        const catApiKey = "live_jp4nNID73ePSoTcQvJLGtYPTs9SezUGvb8heJF8VqWp4CjpNH9wgsroTjdk7lEOQ";
+        const catApiUrl = "https://api.thecatapi.com/v1/images/search?limit=4";
+
+        async function fetchData(apiUrl, apiKey, containerId) {
+            try {
+                const response = await fetch(apiUrl, {
+                    headers: {
+                        "x-api-key": apiKey
+                    }
+                });
+                const data = await response.json();
+                displayData(data, containerId);
+            } catch (error) {
+                console.error("API'den veri alınırken bir hata oluştu:", error);
+            }
+        }
+
+        function displayData(data, containerId) {
+            const dataContainer = document.getElementById(containerId);
+            dataContainer.innerHTML = ""; // Önceki içeriği temizle
+            data.forEach(image => {
+                const imageData = `<img src="${image.url}" alt="Cat or Dog" class="card">`;
+                dataContainer.innerHTML += imageData;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchData(catApiUrl, catApiKey, 'cat-data');
+        });
+
+        document.getElementById('new-cat-button').addEventListener('click', function() {
+            fetchData(catApiUrl, catApiKey, 'cat-data');
+        });
+    </script>
+</body>
+</html>
